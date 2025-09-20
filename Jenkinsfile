@@ -36,23 +36,23 @@ pipeline {
         }
 
         stage('Pruebas Selenium-Cucumber') {
-            steps {
-                // Ejecutamos los features de cucumber
-                bat 'mvn verify -Dcucumber.plugin="pretty, html:target/cucumber-html-reports/index.html, json:target/cucumber.json"'
-            }
-            post {
-                always {
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'target/cucumber-html-reports',
-                        reportFiles: 'index.html',
-                        reportName: 'Reporte Cucumber'
-                    ])
-                }
-            }
-        }
+    		steps {
+       			 // Ejecutamos los features de cucumber
+        		bat 'mvn verify -Dcucumber.plugin="pretty, html:target/cucumber-reports.html, json:target/cucumber.json"'
+    		}
+    		post {
+        	always {
+            	publishHTML([
+                	allowMissing: false,
+                	alwaysLinkToLastBuild: true,
+                	keepAll: true,
+                	reportDir: 'target',
+                	reportFiles: 'cucumber-reports.html',
+                	reportName: 'Reporte Cucumber'
+            	])
+        	}
+    	}
+	}
     }
 
     post {
