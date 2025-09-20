@@ -18,7 +18,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/nsquezadam/myconstruction-login.git',
+                    url: 'https://github.com/nsquezadam/banco_platinum.git',
                     credentialsId: 'git-credentials'
             }
         }
