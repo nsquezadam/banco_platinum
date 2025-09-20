@@ -1,0 +1,8 @@
+com\platinum\servlet\RegistroClienteServlet.class
+com\platinum\model\Ejecutivo.class
+com\platinum\servlet\TransferenciaServlet.class
+com\platinum\servlet\LoginServlet.class
+com\platinum\model\Persona.class
+com\platinum\model\CtaCorriente.class
+com\platinum\model\Usuario.class
+com\platinum\model\Transaccion.class
