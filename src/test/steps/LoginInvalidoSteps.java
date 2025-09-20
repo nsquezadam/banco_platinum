@@ -8,20 +8,19 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class LoginSteps {
+public class LoginInvalidoSteps {
 
     private WebDriver driver;
 
     @Given("el usuario abre la página de login")
-    public void el_usuario_abre_la_pagina_de_login() {
-        // WebDriverManager se encargará de descargar el driver correcto
+    public void abrir_pagina_login() {
         io.github.bonigarcia.wdm.WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
         driver.get("http://localhost:8081/CtaCorriente/login.jsp");
     }
 
     @When("ingresa rut {string} y departamento {string}")
-    public void ingresa_rut_y_departamento(String rut, String departamento) {
+    public void ingresar_credenciales_invalidas(String rut, String departamento) {
         WebElement rutInput = driver.findElement(By.name("rut"));
         rutInput.clear();
         rutInput.sendKeys(rut);
@@ -34,9 +33,9 @@ public class LoginSteps {
     }
 
     @Then("debería ver el mensaje {string}")
-    public void deberia_ver_el_mensaje(String mensaje) {
+    public void verificar_mensaje_error(String mensaje) {
         String pageSource = driver.getPageSource();
-        assertTrue(pageSource.contains(mensaje));
+        assertTrue(pageSource.contains(mensaje), "No se encontró el mensaje esperado en la página");
         driver.quit();
     }
 }

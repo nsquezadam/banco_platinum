@@ -1,17 +1,16 @@
 package com.platinum.model;
 
 public class Transaccion {
-    private int id;
+    private long id;
     private String rutCliente;
     private String rutDueno;
-    private int idCuenta;
+    private long idCuenta;
     private double montoTransferencia;
     private String cuentaTransferencia;
     private String tipoCuenta;
 
-    public Transaccion() {}
-
-    public Transaccion(int id, String rutCliente, String rutDueno, int idCuenta,
+    // Constructor completo
+    public Transaccion(long id, String rutCliente, String rutDueno, long idCuenta,
                        double montoTransferencia, String cuentaTransferencia, String tipoCuenta) {
         this.id = id;
         this.rutCliente = rutCliente;
@@ -22,8 +21,9 @@ public class Transaccion {
         this.tipoCuenta = tipoCuenta;
     }
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // Getters y setters
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
     public String getRutCliente() { return rutCliente; }
     public void setRutCliente(String rutCliente) { this.rutCliente = rutCliente; }
@@ -31,8 +31,8 @@ public class Transaccion {
     public String getRutDueno() { return rutDueno; }
     public void setRutDueno(String rutDueno) { this.rutDueno = rutDueno; }
 
-    public int getIdCuenta() { return idCuenta; }
-    public void setIdCuenta(int idCuenta) { this.idCuenta = idCuenta; }
+    public long getIdCuenta() { return idCuenta; }
+    public void setIdCuenta(long idCuenta) { this.idCuenta = idCuenta; }
 
     public double getMontoTransferencia() { return montoTransferencia; }
     public void setMontoTransferencia(double montoTransferencia) { this.montoTransferencia = montoTransferencia; }

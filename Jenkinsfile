@@ -2,60 +2,48 @@ pipeline {
     agent any
 
     tools {
-        // Configura estos nombres en Manage Jenkins → Global Tool Configuration
         maven 'maven-3.9'
-        jdk   'jdk-17'
-    }
-
-    environment {
-        MAVEN_OPTS = "-Xmx512m"
+        jdk 'jdk-17'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', 
-                    url: 'https://github.com/nsquezadam/banco_platinum.git', 
+                git branch: 'main',
+                    url: 'https://github.com/nsquezadam/CtaCorriente.git',
                     credentialsId: 'git-credentials'
             }
         }
 
-        stage('Build') {
+        stage('Compilar & Test Unitarios') {
             steps {
-                echo "📦 Compilando y ejecutando pruebas unitarias con Maven..."
-                bat 'mvn clean test'
+                bat 'mvn clean test -Dtest=DbConnectionTest'
             }
         }
 
-        stage('Package WAR') {
+        stage('Pruebas Funcionales con Cucumber + Selenium') {
             steps {
-                echo "⚙️ Empaquetando WAR del proyecto..."
-                bat 'mvn package -DskipTests=true'
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-                }
+                bat 'mvn test -Dcucumber.options="--tags @login or @transferencia"'
             }
         }
 
-        stage('Pruebas Automatizadas') {
+        stage('Build WAR') {
             steps {
-                echo "🤖 Ejecutando pruebas Cucumber + Selenium..."
-                bat 'mvn test -Dcucumber.plugin="html:target/cucumber-report.html"'
+                bat 'mvn clean package -DskipTests'
             }
-            post {
-                always {
-                    echo "📑 Archivando reporte de Cucumber"
-                    archiveArtifacts artifacts: 'target/cucumber-report.html', fingerprint: true
-                }
+        }
+
+        stage('Deploy en Tomcat') {
+            steps {
+                bat 'copy target\\CtaCorriente.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"'
             }
         }
     }
 
     post {
         always {
-            echo "Pipeline finalizado (con éxito o con errores)"
+            archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+            junit 'target/surefire-reports/*.xml'
         }
     }
 }
