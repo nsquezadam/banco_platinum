@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9'
+        maven 'maven-3.9'     // Ajusta al nombre que configuraste en Jenkins
         jdk   'jdk-17'
     }
 
@@ -11,50 +11,52 @@ pipeline {
     }
 
     environment {
-        MAVEN_OPTS = "-Xmx512m"
+        REPO_URL = 'https://github.com/nsquezadam/banco_platinum.git'
+        BRANCH   = 'main'
     }
 
     stages {
+
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/nsquezadam/banco_platinum.git',
-                    credentialsId: 'git-credentials'
+                git branch: "${BRANCH}", url: "${REPO_URL}", credentialsId: 'git-credentials'
+                bat 'git rev-parse HEAD'
             }
         }
 
         stage('Compilar y Test Unitarios') {
             steps {
-                bat 'mvn -B clean test'
+                bat 'mvn clean test'
             }
             post {
-                always {
+                success {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('Pruebas Automatizadas - Cucumber & Selenium') {
+        stage('Pruebas Selenium-Cucumber') {
             steps {
-                // Aquí corremos los features de cucumber
-                bat 'mvn verify -Dcucumber.features=src/test/resources/features --plugin pretty'
+                // Ejecutamos los features de cucumber
+                bat 'mvn verify -Dcucumber.plugin="pretty, html:target/cucumber-reports.html, json:target/cucumber.json"'
             }
             post {
                 always {
-                    junit 'target/cucumber-reports/*.xml'
+                    // Publica el reporte HTML en Jenkins
+                    publishHTML([
+                        reportDir: 'target',
+                        reportFiles: 'cucumber-reports.html',
+                        reportName: 'Reporte Cucumber'
+                    ])
                 }
             }
         }
 
-        stage('Empaquetar WAR') {
-            steps {
-                bat 'mvn -B package -DskipTests=true'
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-                }
-            }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
