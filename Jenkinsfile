@@ -3,47 +3,58 @@ pipeline {
 
     tools {
         maven 'maven-3.9'
-        jdk 'jdk-17'
+        jdk   'jdk-17'
+    }
+
+    options {
+        timestamps()
+    }
+
+    environment {
+        MAVEN_OPTS = "-Xmx512m"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/nsquezadam/CtaCorriente.git',
+                    url: 'https://github.com/nsquezadam/myconstruction-login.git',
                     credentialsId: 'git-credentials'
             }
         }
 
-        stage('Compilar & Test Unitarios') {
+        stage('Compilar y Test Unitarios') {
             steps {
-                bat 'mvn clean test -Dtest=DbConnectionTest'
+                bat 'mvn -B clean test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
 
-        stage('Pruebas Funcionales con Cucumber + Selenium') {
+        stage('Pruebas Automatizadas - Cucumber & Selenium') {
             steps {
-                bat 'mvn test -Dcucumber.options="--tags @login or @transferencia"'
+                // Aquí corremos los features de cucumber
+                bat 'mvn verify -Dcucumber.features=src/test/resources/features --plugin pretty'
+            }
+            post {
+                always {
+                    junit 'target/cucumber-reports/*.xml'
+                }
             }
         }
 
-        stage('Build WAR') {
+        stage('Empaquetar WAR') {
             steps {
-                bat 'mvn clean package -DskipTests'
+                bat 'mvn -B package -DskipTests=true'
             }
-        }
-
-        stage('Deploy en Tomcat') {
-            steps {
-                bat 'copy target\\CtaCorriente.war "C:\\Program Files\\Apache Software Foundation\\Tomcat 10.1\\webapps\\"'
+            post {
+                success {
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'target/*.war', fingerprint: true
-            junit 'target/surefire-reports/*.xml'
         }
     }
 }
