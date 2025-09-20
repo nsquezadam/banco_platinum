@@ -63,7 +63,7 @@
     <property name="library.jansi.path" value="C:/apache-maven-3.9.9/lib/jansi-native"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testConexionBD" classname="com.platinum.test.DbConnectionTest" time="0.209">
+  <testcase name="testConexionBD" classname="com.platinum.test.DbConnectionTest" time="0.213">
     <system-out><![CDATA[Conexión a la BD establecida correctamente.
 ]]></system-out>
   </testcase>
