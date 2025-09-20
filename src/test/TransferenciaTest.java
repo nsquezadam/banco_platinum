@@ -79,7 +79,7 @@ public class TransferenciaTest {
             assertEquals("El saldo debe descontarse correctamente",
                          saldoInicial - montoTransferencia, saldoFinal, 0.01);
         } else {
-            fail("❌ No se pudo verificar el saldo después de la transferencia.");
+            fail("No se pudo verificar el saldo después de la transferencia.");
         }
 
         conn.close();
