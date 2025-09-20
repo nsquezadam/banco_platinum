@@ -39,7 +39,7 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<version>8.0.33</version>
 		</dependency>
-  		<!-- JUnit 5 -->
+		<!-- JUnit 5 -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
@@ -96,40 +96,63 @@
 				</configuration>
 			</plugin>
 			<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.0.0-M9</version>
-    <configuration>
-        <redirectTestOutputToFile>false</redirectTestOutputToFile>
-        <forkCount>0</forkCount>
-        <useSystemClassLoader>true</useSystemClassLoader>
-    </configuration>
-	</plugin>
-	<plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-failsafe-plugin</artifactId>
-    <version>3.0.0-M9</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M9</version>
+				<configuration>
+					<redirectTestOutputToFile>false</redirectTestOutputToFile>
+					<forkCount>0</forkCount>
+					<useSystemClassLoader>true</useSystemClassLoader>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.0.0-M9</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+    <groupId>net.masterthought</groupId>
+    <artifactId>maven-cucumber-reporting</artifactId>
+    <version>5.7.0</version>
     <executions>
         <execution>
+            <id>cucumber-report</id>
+            <phase>verify</phase>
             <goals>
-                <goal>integration-test</goal>
-                <goal>verify</goal>
+                <goal>generate</goal>
             </goals>
+            <configuration>
+                <projectName>Banco Platinum</projectName>
+                <outputDirectory>${project.build.directory}/cucumber-html-reports</outputDirectory>
+                <jsonFiles>
+                    <param>${project.build.directory}/cucumber.json</param>
+                </jsonFiles>
+                <buildNumber>${buildNumber}</buildNumber>
+            </configuration>
         </execution>
     </executions>
 </plugin>
 
+
 		</plugins>
 	</build>
 	<distributionManagement>
-    <repository>
-        <id>libs-release-local</id>
-        <url>http://localhost:8082/artifactory/libs-release-local</url>
-    </repository>
-    <snapshotRepository>
-        <id>libs-snapshot-local</id>
-        <url>http://localhost:8082/artifactory/libs-snapshot-local</url>
-    </snapshotRepository>
-</distributionManagement>
+		<repository>
+			<id>libs-release-local</id>
+			<url>http://localhost:8082/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>libs-snapshot-local</id>
+			<url>http://localhost:8082/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
