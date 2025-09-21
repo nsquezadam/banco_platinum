@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9'   // Ajusta al nombre configurado en Jenkins
+        maven 'maven-3.9'
         jdk   'jdk-17'
     }
 
@@ -15,40 +15,52 @@ pipeline {
         BRANCH   = 'main'
     }
 
-    stages {
+    triggers {
+        // Ejecutar todos los días a las 12:30
+        cron('30 12 * * *')
+    }
 
-        stage('Checkout') {
+    stages {
+        stage('Etapa 1 - Preparación del proyecto') {
             steps {
+                echo '🔹 Clonando repositorio remoto...'
                 git branch: "${BRANCH}", url: "${REPO_URL}", credentialsId: 'git-credentials'
                 bat 'git rev-parse HEAD'
             }
         }
 
-        stage('Compilar y Test Unitarios') {
+        stage('Etapa 2 - Construcción del proyecto') {
             steps {
-                bat 'mvn clean test'
+                echo '🔹 Compilando proyecto con Maven...'
+                bat 'mvn clean package -DskipTests=true'
             }
             post {
                 success {
+                    archiveArtifacts artifacts: 'target/*.war', fingerprint: true
+                }
+            }
+        }
+
+        stage('Etapa 3 - Pruebas Automatizadas') {
+            steps {
+                echo '🔹 Ejecutando pruebas con Maven...'
+                bat 'mvn test'
+            }
+            post {
+                always {
                     junit 'target/surefire-reports/*.xml'
                 }
             }
         }
 
-        stage('Pruebas Selenium-Cucumber') {
+        stage('Etapa 4 - Publicar WAR en JFrog Artifactory') {
             steps {
-                bat 'mvn verify -Dcucumber.plugin="pretty, html:target/cucumber-pretty.html, json:target/cucumber.json"'
-            }
-            post {
-                always {
-                    publishHTML(target: [
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'target',
-                        reportFiles: 'cucumber-pretty.html',
-                        reportName: 'Reporte Cucumber'
-                    ])
+                echo '🔹 Publicando artefacto en JFrog...'
+                withCredentials([usernamePassword(credentialsId: 'local-jfrog',
+                                                 usernameVariable: 'ART_USER',
+                                                 passwordVariable: 'ART_PASS')]) {
+                    
+                    bat 'mvn deploy -s C:\\Users\\nsque\\.m2\\settings.xml'
                 }
             }
         }
@@ -56,6 +68,7 @@ pipeline {
 
     post {
         always {
+            echo 'Pipeline finalizado. Limpieza del workspace...'
             cleanWs()
         }
     }
