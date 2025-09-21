@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9'   
+        maven 'maven-3.9'     
         jdk   'jdk-17'
     }
 
@@ -37,14 +37,16 @@ pipeline {
 
         stage('Pruebas Selenium-Cucumber') {
             steps {
-               
-                bat 'mvn verify'
+                bat 'mvn verify -Dcucumber.plugin="pretty, json:target/cucumber.json"'
             }
             post {
                 always {
-                    publishHTML([
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
                         reportDir: 'target/cucumber-html-reports',
-                        reportFiles: 'index.html',    
+                        reportFiles: 'overview-features.html',
                         reportName: 'Reporte Cucumber'
                     ])
                 }
