@@ -1,6 +1,6 @@
-Feature: Registro de transferencias
-
-  Scenario: Registrar una nueva transferencia
-    Given el usuario abre la página de transferencia
-    When completa el formulario con rutCliente "12345678-9", rutDueno "98765432-1", idCuenta "1", monto "50000", cuenta "123-456789", tipo "Corriente"
-    Then debería ver el mensaje "Transferencia registrada con éxito"
+# language: es
+Característica: Transferencias bancarias
+  Escenario: Registrar una transferencia exitosa
+    Dado que la cuenta con id 1 tiene un saldo disponible
+    Cuando se realiza una transferencia de 100.0 pesos
+    Entonces el saldo final debe ser menor en 100.0 pesos

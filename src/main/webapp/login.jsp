@@ -1,30 +1,26 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
 <html>
 <head>
-<title>Login Ejecutivo - Banco Platinum</title>
-<link rel="stylesheet" type="text/css" href="css/estilos.css">
+    <meta charset="UTF-8">
+    <title>Login - Banco Platinum</title>
 </head>
 <body>
+    <h2>Banco Platinum</h2>
+    <form action="login" method="post">
+        <label for="rut">RUT:</label>
+        <input type="text" name="rut" id="rut" required><br><br>
 
-	<h1>Banco Platinum</h1>
-	<h2>Ingreso de Ejecutivo</h2>
+        <label for="departamento">Departamento:</label>
+        <input type="text" name="departamento" id="departamento" required><br><br>
 
-	<form action="login" method="post">
-		RUT Ejecutivo: <input type="text" name="rut"> Departamento: <input
-			type="text" name="departamento">
-		<button type="submit">Ingresar</button>
-	</form>
+        <button type="submit">Ingresar</button>
+    </form>
 
-
-	<!-- Mostrar mensaje de error si existe -->
-	<p style="color: red;">
-		<%=request.getAttribute("error") != null ? request.getAttribute("error") : ""%>
-	</p>
-
-	<!-- Mostrar mensaje de logout si existe -->
-	<p style="color: green;">
-		<%=request.getAttribute("msg") != null ? request.getAttribute("msg") : ""%>
-	</p>
-
+    <!-- Mensaje de error -->
+    <c:if test="${not empty error}">
+        <p id="mensajeError" style="color: red;">${error}</p>
+    </c:if>
 </body>
 </html>

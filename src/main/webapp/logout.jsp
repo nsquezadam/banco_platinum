@@ -1,11 +1,11 @@
-<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-// Invalidar la sesión
-session.invalidate();
+    // Invalida la sesión del usuario
+    if (session != null) {
+        session.invalidate();
+    }
 
-// Agregar un mensaje para mostrar en login.jsp
-request.setAttribute("msg", "Sesión cerrada correctamente");
-
-// Redirigir al login con mensaje
-request.getRequestDispatcher("login.jsp").forward(request, response);
+    // Redirige al login con un mensaje
+    request.setAttribute("mensajeError", "Sesión cerrada correctamente");
+    request.getRequestDispatcher("login.jsp").forward(request, response);
 %>

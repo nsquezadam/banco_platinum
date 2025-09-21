@@ -1,4 +1,5 @@
 com\platinum\servlet\RegistroClienteServlet.class
+com\platinum\servlet\LogoutServlet.class
 com\platinum\model\Ejecutivo.class
 com\platinum\servlet\TransferenciaServlet.class
 com\platinum\servlet\LoginServlet.class

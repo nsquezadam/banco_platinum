@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven-3.9'     // Ajusta al nombre que configuraste en Jenkins
+        maven 'maven-3.9'   
         jdk   'jdk-17'
     }
 
@@ -36,23 +36,20 @@ pipeline {
         }
 
         stage('Pruebas Selenium-Cucumber') {
-    steps {
-        bat 'mvn verify -Dcucumber.plugin="pretty, json:target/cucumber.json"'
-    }
-    post {
-        always {
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: true,
-                keepAll: true,
-                reportDir: 'target/cucumber-html-reports',
-                reportFiles: 'overview-features.html',
-                reportName: 'Reporte Cucumber'
-            ])
+            steps {
+               
+                bat 'mvn verify'
+            }
+            post {
+                always {
+                    publishHTML([
+                        reportDir: 'target/cucumber-html-reports',
+                        reportFiles: 'index.html',    
+                        reportName: 'Reporte Cucumber'
+                    ])
+                }
+            }
         }
-    }
-}
-
     }
 
     post {

@@ -1,16 +1,35 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.platinum.model.Ejecutivo"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
 <html>
 <head>
-<title>Banco Platinum - Menú Principal</title>
-<link rel="stylesheet" type="text/css" href="css/estilos.css">
+<meta charset="UTF-8">
+<title>Banco Platinum - MenÃº Principal</title>
 </head>
 <body>
-	<%@ include file="header.jsp"%>
-	<div class="main-content">
-    <h2>Menú Principal</h2>
-    <p>Seleccione una opción para continuar:</p>
-	</div>
-	
+	<h1>Banco Platinum</h1>
+
+	<c:choose>
+		<c:when test="${not empty sessionScope.ejecutivo}">
+			<%
+                Ejecutivo ejecutivo = (Ejecutivo) session.getAttribute("ejecutivo");
+            %>
+			<!-- Mensaje de bienvenida -->
+			<h2 id="mensajeBienvenida">
+				Bienvenido
+				<%= ejecutivo.getNombre() %>
+				(Depto:
+				<%= ejecutivo.getDepartamento() %>)
+			</h2>
+			<br>
+			<a href="logout">Cerrar sesiÃ³n</a>
+		</c:when>
+		<c:otherwise>
+			<p>
+				No hay sesiÃ³n activa. <a href="login.jsp">Volver a login</a>
+			</p>
+		</c:otherwise>
+	</c:choose>
 </body>
 </html>

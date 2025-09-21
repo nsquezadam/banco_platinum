@@ -1,2 +1,6 @@
+com\platinum\steps\TransferenciaSteps.class
 com\platinum\test\TransferenciaTest.class
+com\platinum\steps\LoginSteps.class
+com\platinum\runner\RunCucumberTest.class
+com\platinum\steps\Hooks.class
 com\platinum\test\DbConnectionTest.class
